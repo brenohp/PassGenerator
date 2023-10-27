@@ -9,7 +9,7 @@ import { PasswordItem } from './components/passwordItem'
 export function Passwords(){
     const [listPasswords, setListPasswords] = useState([])
     const focused = useIsFocused();
-    const { getItem } = useStorage();
+    const { getItem, removeItem } = useStorage();
 
     useEffect(() => {
         async function loadPasswords(){
@@ -19,6 +19,11 @@ export function Passwords(){
         }
         loadPasswords();
     }, [focused])
+
+    async function handleDeletePassword(item){
+        const passwords = await removeItem("@pass", item)
+        setListPasswords(passwords)
+    }
 
 
     return(
@@ -32,7 +37,7 @@ export function Passwords(){
                 style={{ flex:1, paddingTop: 14, }}
                 data={listPasswords}
                 keyExtractor={ (item) =>String(item) }
-                renderItem={ ({ item }) => <PasswordItem data={item}/> }
+                renderItem={ ({ item }) => <PasswordItem data={item} removePassord={() => handleDeletePassword(item) }/> }
                 />
                     
             </View>
